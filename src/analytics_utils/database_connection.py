@@ -73,6 +73,7 @@ class DatabaseConnection:
             raise ValueError("No database connection")
         with self.connection.cursor() as cur:
             df_up = self.__clean_df_nulls(df)
+            self.__fix_int_cols(df_up)
             columns = df_up.columns.tolist()
             rows = df_up.values.tolist()
             column_str = ", ".join(columns)
@@ -99,3 +100,12 @@ class DatabaseConnection:
     @staticmethod
     def __clean_df_nulls(df: pd.DataFrame) -> pd.DataFrame:
         return df.where(pd.notnull(df), None)
+
+    @staticmethod
+    def __fix_int_cols(df: pd.DataFrame):
+        for c in df.columns:
+            col = df[c].copy()
+            if pd.api.types.is_float_dtype(col.dtype):
+                col_notna = col.dropna()
+                if (col_notna % 1 == 0).all():
+                    df[c] = df[c].astype("Int64")
