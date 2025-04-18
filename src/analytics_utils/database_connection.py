@@ -73,7 +73,7 @@ class DatabaseConnection:
             raise ValueError("No database connection")
         with self.connection.cursor() as cur:
             df_up = df.copy()
-            self.__clean_df_nulls(df)
+            self.__clean_df_nulls(df_up)
             self.__fix_int_cols(df_up)
             columns = df_up.columns.tolist()
             rows = df_up.values.tolist()
