@@ -2,7 +2,7 @@ from email.message import EmailMessage
 import smtplib
 
 
-def send_email(obj: str, body: str, receivers_emails: list[str], smt_pass: str):
+def send_email(obj: str, body: str, receivers_emails: list[str] | str, smt_pass: str):
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
     sender_email = "airflow.automation@fiscozen.it"
@@ -23,3 +23,12 @@ def send_email(obj: str, body: str, receivers_emails: list[str], smt_pass: str):
         print(f"Error sending email {e}")
     finally:
         server.quit()
+
+
+if __name__ == "__main__":
+    send_email(
+        "prova",
+        "PROVAAAAA",
+        ["michele.avella@fiscozen.it", "michele.avella.98@gmail.com"],
+        "pass",
+    )
