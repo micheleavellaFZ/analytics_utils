@@ -2,6 +2,7 @@ from .database_connection import DatabaseConnection
 from .data_source import DataSource
 from .dataframe_comparer import compare_dataframe, ComparisonResult
 from .run_python_script import run_python_script
+from .send_email import send_email
 import logging
 
 logging.basicConfig(
