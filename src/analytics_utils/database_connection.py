@@ -1,3 +1,20 @@
+"""
+PostgreSQL database connection utility for data operations.
+
+This module provides a DatabaseConnection class that simplifies interaction with PostgreSQL databases.
+It handles connection management, query execution, and data transfer between pandas DataFrames and
+database tables, with automatic handling of transactions and proper data type conversion.
+
+Key Features:
+- Connection management with context manager support for automatic transaction handling
+- Configuration via JSON files for database connection parameters
+- Query execution from strings or files
+- Conversion of query results to pandas DataFrames
+- Bulk uploading of pandas DataFrames to database tables
+- Automatic handling of NULL values and integer data types
+- Support for conflict resolution during data uploads
+"""
+
 import os
 import json
 import psycopg2

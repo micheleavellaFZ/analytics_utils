@@ -1,3 +1,16 @@
+"""
+A simple email sending utility function.
+
+This script provides a straightforward way to send emails via Gmail's SMTP server,
+with support for plaintext content and multiple recipients.
+
+Key Features:
+- Send emails through Gmail SMTP
+- Support for multiple recipients
+- Simple interface with clear parameters
+- Basic error handling for email delivery issues
+"""
+
 from email.message import EmailMessage
 import smtplib
 

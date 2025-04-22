@@ -1,3 +1,18 @@
+"""
+A utility for comparing and analyzing differences between pandas DataFrames.
+
+This package provides tools for detailed comparison of two DataFrames, helping users
+identify differences in row count and content. It generates a structured comparison
+result that highlights discrepancies and provides a summary of the differences.
+
+Key Features:
+- Row count comparison between two DataFrames
+- Identification of unique rows in each DataFrame
+- Detailed difference report with sample rows
+- Column consistency validation
+- Human-readable summary formatting
+"""
+
 import pandas as pd
 from dataclasses import dataclass
 from dataclasses import dataclass

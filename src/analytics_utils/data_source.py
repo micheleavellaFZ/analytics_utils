@@ -1,3 +1,19 @@
+"""
+A data processing pipeline framework for analytics workflows
+
+This package provides a structured approach to building robust data processing pipelines
+for analytics workflows. It offers an abstract foundation for creating custom data sources
+with standardized fetching, loading, cleaning, validation, and uploading operations.
+
+Key features:
+- Abstract base class for consistent data source implementations
+- Built-in support for CSV, Excel, and Parquet file formats
+- Data validation using Pandera schemas
+- Automatic column name standardization
+- Temporary file handling during processing
+- Extensible pipeline architecture with well-defined interfaces
+"""
+
 from abc import ABC, abstractmethod
 import pandas as pd
 from pathlib import Path
