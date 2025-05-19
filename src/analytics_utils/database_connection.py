@@ -22,6 +22,8 @@ from pathlib import Path
 import pandas as pd
 from psycopg2.extras import execute_batch
 from typing import Iterator
+from datetime import datetime
+import uuid
 
 
 class DatabaseConnection:
@@ -84,13 +86,14 @@ class DatabaseConnection:
             rows = cur.fetchall()
             return pd.DataFrame(rows, columns=[desc[0] for desc in cur.description])
 
-    def get_df_from_query_chunck(
+    def get_df_from_query_chunk(
         self, query: str | Path, chunk_size: int = 50_000
     ) -> Iterator[pd.DataFrame]:
         if self.connection is None:
             raise ValueError("No database connection")
         query_to_run = self.__path_to_string(query)
-        with self.connection.cursor() as cur:
+        cursor_name = f"chunked_cursor_{uuid.uuid4().hex[:8]}"
+        with self.connection.cursor("cursor_name") as cur:
             cur.execute(query_to_run)
             while True:
                 rows = cur.fetchmany(chunk_size)
@@ -151,10 +154,6 @@ if __name__ == "__main__":
     with DatabaseConnection(
         "/Users/michele.avellafiscozen.it/analytics_data_warehouse/config/postgres_db.json"
     ) as conn:
-        df = conn.get_df_from_query("select id, user_id from analytics_lead")
-        print(df.shape)
-
-        for df in conn.get_df_from_query_chunck(
-            "select id, user_id from analytics_lead"
-        ):
-            print(df.shape)
+        print("Start", datetime.now())
+        for df in conn.get_df_from_query_chunk("select * from fiscozen_task"):
+            print(len(df), datetime.now())
