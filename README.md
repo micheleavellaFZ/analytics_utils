@@ -107,7 +107,7 @@ if __name__ == "__main__":
     y = np.array(x) * 3 - 2 + np.random.normal(0, 0.2, len(x))
     y = (y - y.mean()) / y.std()
 
-    val = KFoldValidation(loss_MSE, 4)
+    val = KFoldValidation(loss_function = loss_MSE, n_folds = 4)
     df = val.validate(["linear", "random"], [LinearModel(), RandomModel()], x, y)
 
     print(df)
