@@ -57,6 +57,62 @@ comparison.rows_only_in_right       # number of rows in df2 not in df1
 comparison.diff_dataframe           # dataframe with the rows that are different 
 ```
 
+## model_validation
+
+```python
+from analytics_utils import Model, KFoldValidation, LFOValidation, loss_MSE
+
+class RandomModel(Model[float]):
+    """A model that generates random predictions regardless of input data."""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def train(self, x_train: list[float], y_train: np.ndarray) -> None:
+        pass
+
+    def predict(self, x: list[float]) -> np.ndarray:
+        return np.random.random(len(x))
+
+    def reset(self) -> None:
+        pass
+
+
+class LinearModel(Model[float]):
+    def __init__(self) -> None:
+        super().__init__()
+        self.weights = None
+
+    def train(self, x_train: list[float], y_train: np.ndarray) -> None:
+        X = np.array(x_train).reshape(-1, 1)  # Ensure column vector
+        X = np.column_stack((np.ones(X.shape[0]), X))
+
+        self.weights = np.linalg.inv(X.T @ X) @ X.T @ y_train
+
+    def predict(self, x: list[float]) -> np.ndarray:
+        if self.weights is None:
+            raise ValueError("Model not trained yet")
+
+        X = np.array(x).reshape(-1, 1)
+        X = np.column_stack((np.ones(X.shape[0]), X))
+
+        return X @ self.weights
+
+    def reset(self) -> None:
+        self.weights = None
+
+
+if __name__ == "__main__":
+    x = [float(i) for i in range(200)]
+    y = np.array(x) * 3 - 2 + np.random.normal(0, 0.2, len(x))
+    y = (y - y.mean()) / y.std()
+
+    val = KFoldValidation(loss_MSE, 4)
+    df = val.validate(["linear", "random"], [LinearModel(), RandomModel()], x, y)
+
+    print(df)
+```
+
 ## Prompt
 
 Analyze the provided Python script and generate a comprehensive package-level docstring for it.
