@@ -108,7 +108,9 @@ if __name__ == "__main__":
     y = (y - y.mean()) / y.std()
 
     val = KFoldValidation(loss_function = loss_MSE, n_folds = 4)
-    df = val.validate(["linear", "random"], [LinearModel(), RandomModel()], x, y)
+    df = val.validate(
+        model_names=["linear", "random"], models=[LinearModel(), RandomModel()], x=x, y=y
+    )
 
     print(df)
 ```
