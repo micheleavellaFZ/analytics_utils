@@ -35,9 +35,8 @@ class DataSource(ABC):
         df_validated = self.validate_data(df_cleaned)
         self.upload_data(df_validated)
 
-    @staticmethod
     @abstractmethod
-    def fetch_data(temp_dir: Path) -> Path:
+    def fetch_data(self, temp_dir: Path) -> Path:
         pass
 
     @staticmethod
@@ -59,9 +58,8 @@ class DataSource(ABC):
         names_dict = {c: c.replace(" ", "_") for c in df_in.columns}
         return df_in.rename(columns=names_dict)
 
-    @staticmethod
     @abstractmethod
-    def clean_data(df_in: pd.DataFrame) -> pd.DataFrame:
+    def clean_data(self, df_in: pd.DataFrame) -> pd.DataFrame:
         pass
 
     def validate_data(self, df_in: pd.DataFrame) -> pd.DataFrame:
@@ -77,9 +75,8 @@ class DataSource(ABC):
     def schema(self) -> pa.DataFrameSchema:
         pass
 
-    @staticmethod
     @abstractmethod
-    def upload_data(df_in: pd.DataFrame):
+    def upload_data(self, df_in: pd.DataFrame):
         pass
 
 
