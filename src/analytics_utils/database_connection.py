@@ -84,7 +84,7 @@ class DatabaseConnection:
         with self.connection.cursor() as cur:
             cur.execute(query_to_run)
             rows = cur.fetchall()
-            return pd.DataFrame(rows, columns=[desc[0] for desc in cur.description])
+            return pd.DataFrame(rows, columns=[desc[0] for desc in cur.description])  # type: ignore
 
     def get_df_from_query_chunk(
         self, query: str | Path, chunk_size: int = 50_000
@@ -93,13 +93,13 @@ class DatabaseConnection:
             raise ValueError("No database connection")
         query_to_run = self.__path_to_string(query)
         cursor_name = f"chunked_cursor_{uuid.uuid4().hex[:8]}"
-        with self.connection.cursor("cursor_name") as cur:
+        with self.connection.cursor(cursor_name) as cur:
             cur.execute(query_to_run)
             while True:
                 rows = cur.fetchmany(chunk_size)
                 if not rows:
                     break
-                yield pd.DataFrame(rows, columns=[desc[0] for desc in cur.description])
+                yield pd.DataFrame(rows, columns=[desc[0] for desc in cur.description])  # type: ignore
 
     def upload_df_into_db(
         self, table_name: str, df: pd.DataFrame, conflict: str | None = None
@@ -112,7 +112,7 @@ class DatabaseConnection:
             self.__fix_int_cols(df_up)
             columns = df_up.columns.tolist()
             rows = df_up.values.tolist()
-            column_str = ", ".join(columns)
+            column_str = ", ".join([f'"{col}"' for col in columns])
             placeholder_str = ", ".join(["%s"] * len(columns))
             query = (
                 f"INSERT INTO {table_name} ({column_str}) VALUES ({placeholder_str})"
